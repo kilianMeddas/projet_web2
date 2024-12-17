@@ -1,0 +1,138 @@
+p {
+    font-family: 'inherit';
+    text-align: center;
+}
+
+body {
+    background-color: rgb(153, 144, 144);
+    margin: 0;
+    /* Supprime les marges par défaut */
+    padding: 0;
+    /* Supprime les espaces par défaut */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+.text-background {
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Couleur de fond blanc avec une transparence */
+    padding: 20px;
+    /* Espacement intérieur pour donner de l'air au texte */
+    border-radius: 10px;
+    /* Coins arrondis */
+    margin: 20px auto;
+    /* Centrer et espacement autour */
+    max-width: fit-content;
+    /* Largeur maximale du conteneur */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    /* Ombre légère pour donner de la profondeur */
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: Avenir, sans-serif;
+}
+
+nav {
+    width: 100%;
+    margin: 0 auto;
+    position: sticky;
+    top: 0px;
+    background-image: black;
+    background-size: cover;
+    background-position: bottom;
+}
+
+
+
+nav a {
+    display: block;
+    text-decoration: none;
+    color: black;
+    border-bottom: 2px solid transparent;
+    padding: 10px 0px;
+}
+
+nav a:hover {
+    color: rgb(255, 0, 0);
+    border-bottom: 2px solid rgb(255, 0, 0);
+}
+
+.sous {
+    display: none;
+    box-shadow: 0px 1px 2px #CCC;
+    background-color: white;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+}
+
+nav>ul li:hover .sous {
+    display: block;
+}
+
+.sous li {
+    float: none;
+    width: 100%;
+    text-align: left;
+}
+
+.sous a {
+    padding: 10px;
+    border-bottom: none;
+}
+
+.sous a:hover {
+    border-bottom: none;
+    background-color: RGBa(200, 200, 200, 0.1);
+}
+
+
+
+form {
+    margin-bottom: 20px;
+
+}
+
+
+
+.output {
+    font-weight: bold;
+}
+
+/* Centrer l'icône et le texte sur la même ligne */
+.output,
+form {
+    display: flex;
+    align-items: center;
+    /* Aligner verticalement */
+    gap: 8px;
+    /* Espacement entre l'icône et le texte */
+}
+
+.material-symbols-outlined {
+    font-size: 24px;
+    /* Taille de l'icône, ajustez si nécessaire */
+    vertical-align: middle;
+    /* S'assurer que l'icône est alignée au centre */
+}
+
+input[type="text"] {
+    padding-left: 10px;
+    /* Ajouter un petit espacement à gauche de l'input */
+}
+
+/* Ajouter des marges et des espacements pour améliorer l'affichage */
+form {
+    margin-bottom: 15px;
+    /* Espacement entre les formulaires */
+}
+
+button {
+    margin-left: 10px;
+    /* Espacement entre le bouton et le champ de texte */
+}
