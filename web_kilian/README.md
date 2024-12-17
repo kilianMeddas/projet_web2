@@ -1,0 +1,1 @@
+C'est la version la plus soft possible, il me manque deux pages à faire + le changement des variables pour aller en adéquation avec la db. Je commencerais demain en rentrant. 
