@@ -1,10 +1,20 @@
 <?php
-// Démarrer la session pour conserver les données soumises
+// Démarrer la session pour conserver les données
 session_start();
+
+// Inclure la connexion à la BDD
+
+require '../includes/db.php';
+if ($pdo) {
+    echo "Connexion réussie à la base de données.";
+} else {
+    echo "Échec de connexion.";
+}
+
 
 // Initialiser les variables si elles ne sont pas définies
 if (!isset($_SESSION['username'])) $_SESSION['username'] = '';
-if (!isset($_SESSION['prenom'])) $_SESSION['prenom'] = '';
+if (!isset($_SESSION['nom'])) $_SESSION['nom'] = '';
 if (!isset($_SESSION['mail'])) $_SESSION['mail'] = '';
 
 // Variable pour gérer l'état d'édition
@@ -18,17 +28,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (isset($_POST['annuler'])) {
         // Désactiver le mode édition pour le champ sélectionné
         unset($_SESSION['editing'][$_POST['annuler']]);
-    } else {
-        // Sauvegarder le champ et quitter le mode édition
-        $field = $_POST['field'] ?? '';
-        $value = htmlspecialchars($_POST[$field] ?? '');
-        if ($field && $value) {
-            $_SESSION[$field] = $value;
-        }
+    } elseif (isset($_POST['field'])) {
+        // Sauvegarder le champ et mettre à jour la BDD
+        $field = $_POST['field'];
+        $value = trim($_POST[$field] ?? ''); // Récupérer et nettoyer la valeur
+        
+        
+        // Mettre à jour la session
+        $_SESSION[$field] = htmlspecialchars($value); // Échapper la valeur
+        
+        // Préparer la requête SQL pour mettre à jour la BDD
+        $stmt = $pdo->prepare("UPDATE users SET $field = :value WHERE username = :username");
+        $stmt->execute([
+            'value' => $value,
+            'username' => $_SESSION['username'], // Identifier l'utilisateur connecté
+        ]);
+
         unset($_SESSION['editing'][$field]); // Quitter le mode édition
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -74,27 +94,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php endif; ?>
 
             <!-- Formulaire pour le Prénom -->
-            <?php if (isset($_SESSION['editing']['prenom'])): ?>
+            <?php if (isset($_SESSION['editing']['nom'])): ?>
                 <form method="post" style="text-align: center;">
-                    <label for="prenom"><span class="material-symbols-outlined">id_card</span></label>
-                    <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($_SESSION['prenom']); ?>">
-                    <input type="hidden" name="field" value="prenom">
+                    <label for="nom"><span class="material-symbols-outlined">id_card</span></label>
+                    <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($_SESSION['nom']); ?>">
+                    <input type="hidden" name="field" value="nom">
                     <input type="submit" value="Enregistrer">
-                    <button type="submit" name="annuler" value="prenom">Annuler</button>
+                    <button type="submit" name="annuler" value="nom">Annuler</button>
                 </form>
-            <?php elseif (empty($_SESSION['prenom'])): ?>
+            <?php elseif (empty($_SESSION['nom'])): ?>
                 <form method="post">
-                    <label for="prenom"><span class="material-symbols-outlined">id_card</span></label>
-                    <input type="text" id="prenom" name="prenom">
-                    <input type="hidden" name="field" value="prenom">
+                    <label for="nom"><span class="material-symbols-outlined">id_card</span></label>
+                    <input type="text" id="nom" name="nom">
+                    <input type="hidden" name="field" value="nom">
                     <input type="submit" value="Envoyer">
                 </form>
             <?php else: ?>
                 <p class="output">
-                    <label for="prenom"><span class="material-symbols-outlined">id_card</span></label>
-                    <?php echo htmlspecialchars($_SESSION['prenom']); ?>
+                    <label for="nom"><span class="material-symbols-outlined">id_card</span></label>
+                    <?php echo htmlspecialchars($_SESSION['nom']); ?>
                         <form method="post" style="text-align: center;">
-                            <input type="hidden" name="modifier" value="prenom">
+                            <input type="hidden" name="modifier" value="nom">
                             <input type="submit" value="Modifier">
                         </form>
                 </p>

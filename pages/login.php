@@ -1,36 +1,42 @@
 <?php
 session_start(); // Démarre la session
+
+// Inclusion de la connexion à la base de données
 require '../includes/db.php'; // Connexion à la base
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Récupérer les informations du formulaire
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Requête pour trouver l'utilisateur dans la base
+    // Préparation de la requête pour vérifier l'utilisateur dans la base
     $stmt = $pdo->prepare('SELECT * FROM users WHERE username = :username');
     $stmt->execute(['username' => $username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    #var_dump($user); // Ajoute ceci pour déboguer
-    #exit;
 
+    // Vérification si l'utilisateur existe et si le mot de passe est correct
+    if ($user && $password === $user['password']) {
+        // Si les identifiants sont corrects, démarrer la session
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
+        $_SESSION['mail'] = $user['mail'];
+        $_SESSION['nom'] = $user['nom'];
 
+        // Récupérer les événements de l'emploi du temps pour l'utilisateur connecté
+        $stmt_emploi = $pdo->prepare('SELECT * FROM emplois');
+        $stmt_emploi->execute();
+        $emplois = $stmt_emploi->fetchAll(PDO::FETCH_ASSOC);
 
-    echo $username;
-    echo $password;
+        // Stocker les événements dans la session pour l'affichage sur la page d'accueil
+        $_SESSION['emplois'] = $emplois;
 
-        if ($user && $password === $user['password']) {
-            session_start(); // Démarre la session
-            $_SESSION['username'] = $username; // Stocke le nom d'utilisateur
-    
-        // Redirige vers dashboard.php
-            header('Location: page_accueil.php');
-            exit;
-        } else {
-            echo "Identifiants incorrects.";
-        }
-    
+        // Redirection vers la page d'accueil
+        header('Location: page_accueil.php');
+        exit;
+    } else {
+        // Si l'authentification échoue
+        $error_message = "Identifiants incorrects.";
+    }
 }
 ?>
 

@@ -24,11 +24,9 @@ session_start();
                 <br>
                 <a href="note.php">Notes</a>
                 <br>
-                <a href="#">Documents officiel</a>
+                <a href="edt.php">Emplois du temps</a>
                 <br>
-                <a href="edt.php">Emploie du temps</a>
-                <br>
-                <a href="#">Contacter</a>
+                <a href="contact.php">Contacter</a>
                 <br>
                 <a href="logout.php">Déconnexion</a>
                 </p>
